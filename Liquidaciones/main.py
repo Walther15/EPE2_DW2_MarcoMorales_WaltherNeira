@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from routers import empleados, public
+from routers import empleados, public, hr
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
@@ -14,6 +14,7 @@ app.mount(
 templates = Jinja2Templates(directory="templates")  
 # Rutas privadas 
 app.include_router(empleados.router, prefix="/api/v1")
+app.include_router(hr.router, prefix="/api/v1")
 # Rutas públicas
 app.include_router(public.router)
 
