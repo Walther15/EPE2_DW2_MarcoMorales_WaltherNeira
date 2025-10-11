@@ -1,18 +1,14 @@
 from core.database import get_connection
 
 class UsuarioModel:
+    usuarios_db = {}
 
-    @staticmethod
-    def autenticar(email: str, password: str):
-        conexion = get_connection()
-        if conexion is None:
-            print("No se pudo establecer conexión con la base de datos.")
-            return None
+    @classmethod
+    def registrar(cls, usuario):
+        if usuario.username in cls.usuarios_db:
+            raise ValueError("El usuario ya existe")
+        cls.usuarios_db[usuario.username] = usuario.password
 
-        cursor = conexion.cursor(dictionary=True)
-        query = "SELECT * FROM usuarios WHERE email = %s AND password = %s"
-        cursor.execute(query, (email, password))
-        usuario = cursor.fetchone()
-        cursor.close()
-        conexion.close()
-        return usuario
+    @classmethod
+    def verificar(cls, username, password):
+        return cls.usuarios_db.get(username) == password
